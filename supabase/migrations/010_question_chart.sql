@@ -1,0 +1,13 @@
+-- =============================================================================
+-- Thêm trường chart (jsonb) cho câu hỏi: dữ liệu biểu đồ Địa lí (và môn khác)
+-- để hệ thống vẽ biểu đồ bằng recharts.
+-- Cấu trúc:
+--   {
+--     "type": "bar" | "line" | "pie" | "area" | "combo",
+--     "title": "Tên biểu đồ",
+--     "unit": "%",                       -- đơn vị trục tung (tuỳ chọn)
+--     "categories": ["2018", "2019", ...],
+--     "series": [ { "name": "Công nghiệp", "type": "bar", "data": [10, 20, ...] } ]
+--   }
+-- =============================================================================
+alter table questions add column if not exists chart jsonb;
