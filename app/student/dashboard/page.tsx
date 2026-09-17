@@ -1,14 +1,20 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/lib/hooks/use-auth';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { AppHeader } from '@/components/layout/app-header';
-import { PageLoading } from '@/components/layout/page-loading';
-import { formatDateVi } from '@/lib/format';
-import { Plus, ClipboardList, Trophy, Clock3, ChevronRight } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/hooks/use-auth";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { AppHeader } from "@/components/layout/app-header";
+import { PageLoading } from "@/components/layout/page-loading";
+import { formatDateVi } from "@/lib/format";
+import {
+  Plus,
+  ClipboardList,
+  Trophy,
+  Clock3,
+  ChevronRight,
+} from "lucide-react";
 
 interface ExamHistory {
   id: string;
@@ -17,7 +23,7 @@ interface ExamHistory {
   submittedAt: string;
   score?: number;
   maxScore?: number;
-  status: 'pending' | 'graded';
+  status: "pending" | "graded";
 }
 
 export default function StudentDashboard() {
@@ -27,36 +33,47 @@ export default function StudentDashboard() {
   const [loadingData, setLoadingData] = useState(false);
 
   useEffect(() => {
-    if (!loading && (!user || user.role !== 'student')) {
-      router.push('/');
+    if (!loading) {
+      if (!user) {
+        router.replace("/signin");
+        return;
+      }
+      if (user.role !== "student") {
+        router.replace(user.role === "teacher" ? "/teacher/dashboard" : "/");
+        return;
+      }
     }
   }, [user, loading, router]);
 
   useEffect(() => {
-    if (user) fetchHistory();
-  }, [user]);
-
-  const fetchHistory = async () => {
-    setLoadingData(true);
-    try {
-      const res = await fetch('/api/student/exam-history');
-      if (res.ok) setHistory(await res.json());
-    } catch (error) {
-      console.error('Lỗi tải lịch sử:', error);
-    } finally {
-      setLoadingData(false);
+    if (user?.role !== "student") {
+      return;
     }
-  };
+
+    const loadHistory = async () => {
+      setLoadingData(true);
+      try {
+        const res = await fetch("/api/student/exam-history");
+        if (res.ok) setHistory(await res.json());
+      } catch (error) {
+        console.error("Lỗi tải lịch sử:", error);
+      } finally {
+        setLoadingData(false);
+      }
+    };
+
+    void loadHistory();
+  }, [user]);
 
   if (loading) return <PageLoading />;
 
-  const graded = history.filter((h) => h.status === 'graded');
+  const graded = history.filter((h) => h.status === "graded");
   // Điểm trung bình quy về thang 10.
   const avg =
     graded.length > 0
       ? graded.reduce(
           (s, h) => s + ((h.score || 0) / (h.maxScore || 1)) * 10,
-          0
+          0,
         ) / graded.length
       : null;
   // Quy điểm 1 bài về thang 10.
@@ -79,9 +96,11 @@ export default function StudentDashboard() {
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight">
-              Xin chào, {user?.fullName || 'bạn'} 👋
+              Xin chào, {user?.fullName || "bạn"} 👋
             </h1>
-            <p className="mt-1 text-muted-foreground">Bài thi và kết quả của bạn</p>
+            <p className="mt-1 text-muted-foreground">
+              Bài thi và kết quả của bạn
+            </p>
           </div>
           <Button asChild>
             <Link href="/student/join-exam">
@@ -102,13 +121,13 @@ export default function StudentDashboard() {
             icon={<Trophy className="h-5 w-5" />}
             color="from-amber-500 to-orange-500"
             label="Điểm trung bình"
-            value={avg !== null ? `${avg.toFixed(1)}/10` : '—'}
+            value={avg !== null ? `${avg.toFixed(1)}/10` : "—"}
           />
           <StatCard
             icon={<Clock3 className="h-5 w-5" />}
             color="from-sky-500 to-cyan-500"
             label="Chờ chấm"
-            value={String(history.filter((h) => h.status === 'pending').length)}
+            value={String(history.filter((h) => h.status === "pending").length)}
           />
         </div>
 
@@ -134,7 +153,8 @@ export default function StudentDashboard() {
         ) : (
           <div className="space-y-3">
             {history.map((exam) => {
-              const isGraded = exam.status === 'graded' && exam.score !== undefined;
+              const isGraded =
+                exam.status === "graded" && exam.score !== undefined;
               const diem = toScore10(exam.score, exam.maxScore);
               const pass = diem >= 5;
               return (
@@ -146,10 +166,10 @@ export default function StudentDashboard() {
                   <div
                     className={`flex h-16 w-16 shrink-0 flex-col items-center justify-center rounded-2xl border-2 ${
                       !isGraded
-                        ? 'border-amber-200 bg-amber-50 text-amber-600'
+                        ? "border-amber-200 bg-amber-50 text-amber-600"
                         : pass
-                          ? 'border-emerald-200 bg-emerald-50 text-emerald-600'
-                          : 'border-destructive/30 bg-destructive/5 text-destructive'
+                          ? "border-emerald-200 bg-emerald-50 text-emerald-600"
+                          : "border-destructive/30 bg-destructive/5 text-destructive"
                     }`}
                   >
                     {isGraded ? (
@@ -167,7 +187,9 @@ export default function StudentDashboard() {
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <h3 className="font-semibold break-words">{exam.examName}</h3>
+                    <h3 className="font-semibold break-words">
+                      {exam.examName}
+                    </h3>
                     <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-muted-foreground">
                       {exam.classroomName && <span>{exam.classroomName}</span>}
                       <span>Nộp lúc {formatDateVi(exam.submittedAt)}</span>
@@ -180,9 +202,15 @@ export default function StudentDashboard() {
                   </div>
 
                   {isGraded && (
-                    <Button asChild size="sm" variant="outline" className="shrink-0">
+                    <Button
+                      asChild
+                      size="sm"
+                      variant="outline"
+                      className="shrink-0"
+                    >
                       <Link href={`/student/results/${exam.id}`}>
-                        Xem chi tiết <ChevronRight className="ml-0.5 h-3.5 w-3.5" />
+                        Xem chi tiết{" "}
+                        <ChevronRight className="ml-0.5 h-3.5 w-3.5" />
                       </Link>
                     </Button>
                   )}

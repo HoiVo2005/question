@@ -40,7 +40,7 @@ export const PLANS: Record<Exclude<PlanId, 'free'>, Plan> = {
   plus: {
     id: 'plus',
     name: 'PLUS',
-    tagline: 'Tốt nhất cho giáo viên dạy đơn lẻ, người hướng dẫn',
+    tagline: 'Tốt nhất cho giáo viên cá nhân và lớp nhỏ',
     monthly: 12.49,
     yearly: 9.99,
     monthlyVnd: 299000,
@@ -50,31 +50,31 @@ export const PLANS: Record<Exclude<PlanId, 'free'>, Plan> = {
     unlockTitle: 'PLUS',
     features: [
       {
-        title: 'Sử dụng Cá nhân hoặc Quy mô nhỏ',
-        desc: 'Lý tưởng cho cá nhân hoặc sử dụng hạn chế mà không cần quyền truy cập chung.',
+        title: 'Dành cho giáo viên cá nhân',
+        desc: 'Phù hợp với giáo viên riêng lẻ hoặc nhóm nhỏ muốn quản lý đề thi đơn giản.',
       },
       {
-        title: '200 Kết quả hàng tháng',
-        desc: 'Theo dõi lên đến 200 kết quả bài kiểm tra trực tuyến hoặc trên giấy mỗi tháng.',
+        title: '200 kết quả hàng tháng',
+        desc: 'Theo dõi lên đến 200 kết quả bài kiểm tra trực tuyến hoặc in ấn mỗi tháng.',
       },
       {
-        title: '20 Lượt tạo bài kiểm tra bằng AI',
-        desc: 'Tạo tối đa 20 bài kiểm tra độc bản hỗ trợ bởi AI mỗi tháng để thử thách học sinh với những câu hỏi mới mẻ.',
+        title: '20 lượt tạo đề AI/tháng',
+        desc: 'Tạo tối đa 20 bài kiểm tra độc bản bằng AI mỗi tháng.',
       },
       {
-        title: 'Không giới hạn Câu hỏi & Bài kiểm tra',
-        desc: 'Tạo và tiến hành không giới hạn số lượng bài kiểm tra và câu hỏi.',
+        title: 'Không giới hạn đề & câu hỏi',
+        desc: 'Tạo và lưu trữ không giới hạn câu hỏi, mã đề và đề thi.',
       },
       {
-        title: 'Hệ thống Anti-Cheat không giới hạn',
-        desc: 'Hệ thống Anti-Cheat đáng tin cậy để ngăn chặn gian lận trong các bài kiểm tra trực tuyến.',
+        title: 'Chống gian lận cơ bản',
+        desc: 'Bao gồm tính năng ngăn đánh dấu/cheat để bảo vệ bài kiểm tra trực tuyến.',
       },
     ],
   },
   pro: {
     id: 'pro',
     name: 'PRO',
-    tagline: 'Tốt nhất cho các trường học nhỏ, doanh nghiệp nhỏ',
+    tagline: 'Tốt nhất cho trường học nhỏ và tổ chức đào tạo',
     monthly: 32.99,
     yearly: 26.99,
     monthlyVnd: 799000,
@@ -84,31 +84,31 @@ export const PLANS: Record<Exclude<PlanId, 'free'>, Plan> = {
     unlockTitle: 'PRO',
     features: [
       {
-        title: 'Cộng tác theo Nhóm',
-        desc: 'Mời tối đa 10 giáo viên cùng quản lý ngân hàng đề và lớp học chung.',
+        title: 'Cộng tác nhóm đến 10 giáo viên',
+        desc: 'Chia sẻ ngân hàng đề và lớp học trong tổ chức với quyền truy cập nhóm.',
       },
       {
-        title: '1.000 Kết quả hàng tháng',
-        desc: 'Theo dõi lên đến 1.000 kết quả bài kiểm tra trực tuyến hoặc trên giấy mỗi tháng.',
+        title: '1.000 kết quả hàng tháng',
+        desc: 'Theo dõi lên đến 1.000 kết quả bài kiểm tra trực tuyến hoặc in ấn mỗi tháng.',
       },
       {
-        title: '100 Lượt tạo bài kiểm tra bằng AI',
-        desc: 'Tạo tối đa 100 bài kiểm tra độc bản hỗ trợ bởi AI mỗi tháng cho cả nhóm.',
+        title: '100 lượt tạo đề AI/tháng',
+        desc: 'Tạo tối đa 100 bài kiểm tra AI mỗi tháng cho cả nhóm sử dụng.',
       },
       {
         title: 'Thư viện đề dùng chung',
-        desc: 'Lưu trữ và chia sẻ ngân hàng đề trong nội bộ trường, doanh nghiệp.',
+        desc: 'Lưu trữ và chia sẻ ngân hàng đề giữa các giáo viên trong tổ chức.',
       },
       {
-        title: 'Báo cáo & Thống kê nâng cao',
-        desc: 'Phân tích kết quả chi tiết theo lớp, theo môn và xuất báo cáo.',
+        title: 'Báo cáo & thống kê nâng cao',
+        desc: 'Phân tích kết quả theo lớp, môn học và xuất báo cáo chi tiết.',
       },
     ],
   },
   max: {
     id: 'max',
     name: 'MAX',
-    tagline: 'Tốt nhất cho các trường học lớn hơn, đại học, công ty',
+    tagline: 'Tốt nhất cho tổ chức lớn, trường học và doanh nghiệp',
     monthly: 64.99,
     yearly: 54.99,
     monthlyVnd: 1590000,
@@ -119,24 +119,24 @@ export const PLANS: Record<Exclude<PlanId, 'free'>, Plan> = {
     unlockTitle: 'MAX',
     features: [
       {
-        title: 'Cộng tác cấp Doanh nghiệp',
-        desc: 'Quyền truy cập nhóm chuyên dụng, tùy chỉnh. Bắt đầu từ hơn 10 tài khoản.',
+        title: 'Giải pháp doanh nghiệp',
+        desc: 'Hỗ trợ cấu hình theo quy mô lớn, nhiều tài khoản và quản lý tập trung.',
       },
       {
-        title: 'Giới hạn Kết quả chuyên dụng',
-        desc: 'Giới hạn kết quả chuyên dụng, tùy chỉnh. Bắt đầu từ hơn 3000 kết quả hàng tháng.',
+        title: 'Kết quả hàng tháng tùy chỉnh',
+        desc: 'Hạn mức kết quả linh hoạt với cấu hình dành cho hơn 3.000 kết quả mỗi tháng.',
       },
       {
-        title: 'Tạo bài kiểm tra bằng AI không giới hạn',
-        desc: 'Không giới hạn việc tạo bài kiểm tra hỗ trợ bởi AI. Tạo bao nhiêu tùy nhu cầu của bạn.',
+        title: 'Tạo đề AI không giới hạn',
+        desc: 'Không giới hạn số bài kiểm tra được tạo bằng trợ lý AI.',
       },
       {
         title: 'Thương hiệu tùy chỉnh',
-        desc: 'Gắn thương hiệu vào tất cả tài liệu của bạn với logo tùy chỉnh để có trải nghiệm nhất quán.',
+        desc: 'Tùy chỉnh logo và giao diện tài liệu để phù hợp thương hiệu tổ chức.',
       },
       {
-        title: 'Hỗ trợ Ưu tiên (Premium)',
-        desc: 'Truy cập hỗ trợ ưu tiên với cam kết mức độ dịch vụ (SLA) tùy chọn theo yêu cầu.',
+        title: 'Hỗ trợ ưu tiên',
+        desc: 'Được hỗ trợ nhanh với dịch vụ cao cấp và SLA theo yêu cầu.',
       },
     ],
   },

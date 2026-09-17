@@ -1,38 +1,39 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { LogIn, AlertCircle, Loader2, HelpCircle } from 'lucide-react';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { LogIn, AlertCircle, Loader2, HelpCircle } from "lucide-react";
 
 export default function JoinExamPage() {
   const router = useRouter();
-  const [examCode, setExamCode] = useState('');
+  const [examCode, setExamCode] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleJoin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
-      const response = await fetch('/api/student/join-exam', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/student/join-exam", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ examCode: examCode.toUpperCase() }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || 'Không thể vào thi');
+        setError(data.error || "Không thể vào thi");
         return;
       }
 
       router.push(`/student/exam/${data.submissionId}`);
     } catch (err) {
-      setError('Đã xảy ra lỗi. Vui lòng thử lại.');
+      setError("Đã xảy ra lỗi. Vui lòng thử lại.");
     } finally {
       setLoading(false);
     }

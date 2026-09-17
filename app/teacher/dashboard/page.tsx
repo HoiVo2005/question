@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { useSession } from '@/lib/auth-client';
-import { AppHeader } from '@/components/layout/app-header';
-import { PageLoading } from '@/components/layout/page-loading';
-import { confirmDelete, toast } from '@/lib/swal';
-import { UpgradeModal } from '@/components/billing/upgrade-modal';
-import { usePlan } from '@/lib/hooks/use-plan';
-import { PLAN_LABELS } from '@/lib/plans';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { useSession } from "@/lib/auth-client";
+import { AppHeader } from "@/components/layout/app-header";
+import { PageLoading } from "@/components/layout/page-loading";
+import { confirmDelete, toast } from "@/lib/swal";
+import { UpgradeModal } from "@/components/billing/upgrade-modal";
+import { usePlan } from "@/lib/hooks/use-plan";
+import { PLAN_LABELS } from "@/lib/plans";
 import {
   Sparkles,
   FileText,
@@ -22,7 +22,7 @@ import {
   Layers,
   BarChart3,
   Crown,
-} from 'lucide-react';
+} from "lucide-react";
 
 interface ExamSet {
   id: string;
@@ -43,20 +43,22 @@ export default function TeacherDashboard() {
 
   useEffect(() => {
     if (isPending) return;
+
     if (!session?.user) {
-      router.push('/signin');
+      setLoading(false);
       return;
     }
+
     loadExams();
   }, [session, isPending]);
 
   const loadExams = async () => {
     try {
-      const response = await fetch('/api/teacher/exam-bank');
+      const response = await fetch("/api/teacher/exam-bank");
       const data = await response.json();
       setExams(data.examSets || []);
     } catch (err) {
-      console.error('Không tải được ngân hàng đề:', err);
+      console.error("Không tải được ngân hàng đề:", err);
     } finally {
       setLoading(false);
     }
@@ -64,16 +66,16 @@ export default function TeacherDashboard() {
 
   const handleDelete = async (id: string) => {
     const ok = await confirmDelete({
-      title: 'Xoá mã đề?',
-      text: 'Mã đề cùng câu hỏi và đáp án sẽ bị xoá vĩnh viễn.',
+      title: "Xoá mã đề?",
+      text: "Mã đề cùng câu hỏi và đáp án sẽ bị xoá vĩnh viễn.",
     });
     if (!ok) return;
     try {
-      await fetch(`/api/teacher/exam-bank/${id}`, { method: 'DELETE' });
+      await fetch(`/api/teacher/exam-bank/${id}`, { method: "DELETE" });
       setExams((prev) => prev.filter((e) => e.id !== id));
-      await toast('Đã xoá mã đề');
+      await toast("Đã xoá mã đề");
     } catch (err) {
-      console.error('Không xoá được:', err);
+      console.error("Không xoá được:", err);
     }
   };
 
@@ -87,12 +89,12 @@ export default function TeacherDashboard() {
       <AppHeader
         actions={
           <Button
-            variant={plan === 'free' ? 'default' : 'outline'}
+            variant={plan === "free" ? "default" : "outline"}
             className="hidden sm:inline-flex"
             onClick={() => setUpgradeOpen(true)}
           >
             <Crown className="mr-1.5 h-4 w-4 text-amber-400" />
-            {plan === 'free' ? 'Nâng cấp' : `Gói ${PLAN_LABELS[plan]}`}
+            {plan === "free" ? "Nâng cấp" : `Gói ${PLAN_LABELS[plan]}`}
           </Button>
         }
       />
@@ -102,7 +104,9 @@ export default function TeacherDashboard() {
       <div className="mx-auto max-w-7xl px-4 py-8">
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="text-3xl font-extrabold tracking-tight">Ngân hàng đề</h1>
+            <h1 className="text-3xl font-extrabold tracking-tight">
+              Ngân hàng đề
+            </h1>
             <p className="mt-1 text-muted-foreground">
               Các mã đề bạn đã tạo. Thêm chúng vào bài thi trong mục Lớp học.
             </p>
@@ -129,13 +133,13 @@ export default function TeacherDashboard() {
               onClick={() => setUpgradeOpen(true)}
             >
               <Crown className="mr-1.5 h-4 w-4 text-amber-500" />
-              {plan === 'free' ? 'Nâng cấp' : `Gói ${PLAN_LABELS[plan]}`}
+              {plan === "free" ? "Nâng cấp" : `Gói ${PLAN_LABELS[plan]}`}
             </Button>
           </div>
         </div>
 
         {/* Banner mời nâng cấp (chỉ hiện khi đang dùng gói miễn phí) */}
-        {plan === 'free' && (
+        {plan === "free" && (
           <button
             onClick={() => setUpgradeOpen(true)}
             className="mb-8 flex w-full items-center gap-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-700 p-5 text-left text-white shadow-soft transition hover:shadow-soft-lg"
@@ -144,9 +148,12 @@ export default function TeacherDashboard() {
               <Crown className="h-6 w-6 text-amber-300" />
             </span>
             <div className="min-w-0 flex-1">
-              <p className="text-lg font-bold">Mở khoá toàn bộ tính năng với gói PLUS</p>
+              <p className="text-lg font-bold">
+                Mở khoá toàn bộ tính năng với gói PLUS
+              </p>
               <p className="text-sm text-blue-100/90">
-                Tạo đề bằng AI nhiều hơn, không giới hạn câu hỏi & chống gian lận nâng cao.
+                Tạo đề bằng AI nhiều hơn, không giới hạn câu hỏi & chống gian
+                lận nâng cao.
               </p>
             </div>
             <span className="hidden shrink-0 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-blue-700 sm:inline-block">
@@ -205,7 +212,10 @@ export default function TeacherDashboard() {
               >
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                   <div className="min-w-0 flex-1">
-                    <h3 className="text-base font-semibold break-words sm:text-lg" title={exam.name}>
+                    <h3
+                      className="text-base font-semibold break-words sm:text-lg"
+                      title={exam.name}
+                    >
                       {exam.name}
                     </h3>
                     <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-muted-foreground">
@@ -215,13 +225,19 @@ export default function TeacherDashboard() {
                       {exam.subject && <span>{exam.subject}</span>}
                       {exam.grade ? <span>Lớp {exam.grade}</span> : null}
                       <span className="inline-flex items-center gap-1">
-                        <FileText className="h-3.5 w-3.5" /> {exam.questionCount} câu
+                        <FileText className="h-3.5 w-3.5" />{" "}
+                        {exam.questionCount} câu
                       </span>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-2 lg:flex lg:flex-wrap lg:justify-end">
-                    <Button asChild size="sm" variant="outline" className="w-full lg:w-auto">
+                    <Button
+                      asChild
+                      size="sm"
+                      variant="outline"
+                      className="w-full lg:w-auto"
+                    >
                       <a
                         href={`/teacher/exam-preview/${exam.id}`}
                         target="_blank"
@@ -230,13 +246,27 @@ export default function TeacherDashboard() {
                         <Eye className="mr-1 h-3.5 w-3.5" /> Xem / In
                       </a>
                     </Button>
-                    <Button asChild size="sm" variant="outline" className="w-full lg:w-auto">
-                      <a href={`/api/teacher/exams/${exam.id}/export?type=exam`}>
+                    <Button
+                      asChild
+                      size="sm"
+                      variant="outline"
+                      className="w-full lg:w-auto"
+                    >
+                      <a
+                        href={`/api/teacher/exams/${exam.id}/export?type=exam`}
+                      >
                         <FileDown className="mr-1 h-3.5 w-3.5" /> Đề (Word)
                       </a>
                     </Button>
-                    <Button asChild size="sm" variant="outline" className="w-full lg:w-auto">
-                      <a href={`/api/teacher/exams/${exam.id}/export?type=answer`}>
+                    <Button
+                      asChild
+                      size="sm"
+                      variant="outline"
+                      className="w-full lg:w-auto"
+                    >
+                      <a
+                        href={`/api/teacher/exams/${exam.id}/export?type=answer`}
+                      >
                         <KeyRound className="mr-1 h-3.5 w-3.5" /> Đáp án
                       </a>
                     </Button>

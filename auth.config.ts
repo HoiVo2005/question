@@ -7,12 +7,23 @@ if (!process.env.BETTER_AUTH_SECRET) {
   throw new Error('BETTER_AUTH_SECRET is not set. Generate one with: openssl rand -base64 32');
 }
 
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+const trustedOrigins = [
+  appUrl,
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'http://127.0.0.1:3000',
+  'http://127.0.0.1:3001',
+];
+
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: 'pg',
     schema,
     usePlural: true,
   }),
+  baseURL: appUrl,
+  trustedOrigins,
   secret: process.env.BETTER_AUTH_SECRET,
   user: {
     additionalFields: {
@@ -31,6 +42,10 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 8,
+    sendResetPassword: async ({ user, url }) => {
+      console.log(`[auth] Reset password requested for ${user.email}`);
+      console.log(`[auth] Reset link: ${url}`);
+    },
   },
   socialProviders: {
     google: {

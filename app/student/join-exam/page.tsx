@@ -1,37 +1,44 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/lib/hooks/use-auth';
-import { Button } from '@/components/ui/button';
-import { AppHeader } from '@/components/layout/app-header';
-import { PageLoading } from '@/components/layout/page-loading';
-import Link from 'next/link';
-import { LogIn, AlertCircle, Loader2, ArrowLeft } from 'lucide-react';
-import { notify } from '@/lib/swal';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/hooks/use-auth";
+import { Button } from "@/components/ui/button";
+import { AppHeader } from "@/components/layout/app-header";
+import { PageLoading } from "@/components/layout/page-loading";
+import Link from "next/link";
+import { LogIn, AlertCircle, Loader2, ArrowLeft } from "lucide-react";
+import { notify } from "@/lib/swal";
 
 export default function JoinExamPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
-  const [roomCode, setRoomCode] = useState('');
+  const [roomCode, setRoomCode] = useState("");
   const [joining, setJoining] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!loading && (!user || user.role !== 'student')) {
-      router.push('/');
+    if (!loading) {
+      if (!user) {
+        router.replace("/signin");
+        return;
+      }
+      if (user.role !== "student") {
+        router.replace(user.role === "teacher" ? "/teacher/dashboard" : "/");
+      }
     }
   }, [user, loading, router]);
 
   const handleJoinExam = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setJoining(true);
 
     try {
-      const res = await fetch('/api/student/join-exam', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/student/join-exam", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           roomCode: roomCode.toUpperCase(),
         }),
@@ -39,18 +46,18 @@ export default function JoinExamPage() {
 
       if (!res.ok) {
         const data = await res.json();
-        const msg = data.error || 'Không thể vào thi';
+        const msg = data.error || "Không thể vào thi";
         setError(msg);
         // Hết giờ / chưa tới giờ / không thuộc lớp / không tìm thấy => cảnh báo
-        await notify(msg, res.status === 500 ? 'error' : 'warning');
+        await notify(msg, res.status === 500 ? "error" : "warning");
         return;
       }
 
       const { submissionId } = await res.json();
       router.push(`/student/exam/${submissionId}`);
     } catch (err) {
-      setError('Đã xảy ra lỗi. Vui lòng thử lại.');
-      await notify('Đã xảy ra lỗi. Vui lòng thử lại.', 'error');
+      setError("Đã xảy ra lỗi. Vui lòng thử lại.");
+      await notify("Đã xảy ra lỗi. Vui lòng thử lại.", "error");
       console.error(err);
     } finally {
       setJoining(false);
@@ -93,8 +100,8 @@ export default function JoinExamPage() {
                 className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-center text-lg font-mono tracking-widest outline-none focus:ring-2 focus:ring-primary/40 disabled:opacity-60"
               />
               <p className="mt-1 text-xs text-muted-foreground">
-                Nhập mã bài thi giáo viên cung cấp. Đề thi sẽ được chọn ngẫu nhiên.
-                Bạn cần đã được thêm vào lớp.
+                Nhập mã bài thi giáo viên cung cấp. Đề thi sẽ được chọn ngẫu
+                nhiên. Bạn cần đã được thêm vào lớp.
               </p>
             </div>
 
@@ -105,7 +112,12 @@ export default function JoinExamPage() {
               </div>
             )}
 
-            <Button type="submit" className="w-full" size="lg" disabled={joining}>
+            <Button
+              type="submit"
+              className="w-full"
+              size="lg"
+              disabled={joining}
+            >
               {joining ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
