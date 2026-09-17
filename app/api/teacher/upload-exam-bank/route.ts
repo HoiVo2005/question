@@ -5,7 +5,14 @@ import { supabaseAdmin } from '@/lib/supabase/client';
 import * as XLSX from 'xlsx';
 import Groq from 'groq-sdk';
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+// Khởi tạo Groq lười (lazy) để thiếu GROQ_API_KEY không làm crash build.
+let groq: Groq | null = null;
+function getGroq(): Groq {
+  if (!groq) {
+    groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+  }
+  return groq;
+}
 
 // Lấy văn bản thô từ file Word/PDF.
 async function getRawText(ext: string, buffer: Buffer): Promise<string> {
@@ -23,7 +30,7 @@ async function getRawText(ext: string, buffer: Buffer): Promise<string> {
 async function extractWithAI(rawText: string): Promise<ParsedQ[]> {
   if (!process.env.GROQ_API_KEY) return [];
   const text = rawText.slice(0, 16000); // giới hạn độ dài
-  const completion = await groq.chat.completions.create({
+  const completion = await getGroq().chat.completions.create({
     model: 'llama-3.3-70b-versatile',
     temperature: 0.2,
     max_tokens: 8000,

@@ -7,9 +7,14 @@ import {
   type ExamBlueprint,
 } from './exam-blueprint';
 
-const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY,
-});
+// Khởi tạo Groq lười (lazy) để thiếu GROQ_API_KEY không làm crash build.
+let groq: Groq | null = null;
+function getGroq(): Groq {
+  if (!groq) {
+    groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+  }
+  return groq;
+}
 
 // Model Groq chất lượng cao, hỗ trợ JSON mode và tiếng Việt tốt.
 const GROQ_MODEL = 'llama-3.3-70b-versatile';
@@ -76,7 +81,7 @@ export async function generateExamSets(
     const setCode = generateSetCode(setNum);
     const prompt = buildGenerationPrompt(config, blueprint, setNum);
 
-    const completion = await groq.chat.completions.create({
+    const completion = await getGroq().chat.completions.create({
       model: GROQ_MODEL,
       temperature: 0.8,
       max_tokens: 8000,
