@@ -8,7 +8,6 @@ import { usePlan } from '@/lib/hooks/use-plan';
 import {
   PLANS,
   PAID_PLAN_ORDER,
-  formatUsd,
   formatVnd,
   vndPrice,
   type Plan,
@@ -58,7 +57,6 @@ export function UpgradeModal({
   if (!mounted || !open) return null;
 
   const active: Plan = PLANS[selected];
-  const price = (p: Plan) => (yearly ? p.yearly : p.monthly);
 
   const handleConfirm = async () => {
     if (selected === 'max') {
@@ -190,24 +188,16 @@ export function UpgradeModal({
                       {p.pricePrefix && (
                         <span className="text-sm font-medium">{p.pricePrefix} </span>
                       )}
-                      <span className="text-xl font-extrabold">{formatUsd(price(p))}</span>
+                      <span className="text-xl font-extrabold">
+                        {formatVnd(vndPrice(id, yearly ? 'yearly' : 'monthly'))}
+                      </span>
                       <span
                         className={`text-sm ${
                           isSelected ? 'text-blue-50/90' : 'text-muted-foreground'
                         }`}
                       >
-                        {' '}
-                        / tháng
+                        {yearly ? ' / năm' : ' / tháng'}
                       </span>
-                    </p>
-                    <p
-                      className={`text-xs ${
-                        isSelected ? 'text-blue-50/90' : 'text-muted-foreground'
-                      }`}
-                    >
-                      Thanh toán{' '}
-                      {formatVnd(vndPrice(id, yearly ? 'yearly' : 'monthly'))}
-                      {yearly ? ' / năm' : ' / tháng'}
                     </p>
                   </div>
                   <span
@@ -234,11 +224,6 @@ export function UpgradeModal({
               ? `Bạn đang dùng gói ${active.name}`
               : active.cta}
           </button>
-          {yearly && selected !== 'max' && (
-            <p className="mt-2 text-center text-xs text-muted-foreground">
-              Thanh toán {formatVnd(vndPrice(selected, 'yearly'))} mỗi năm
-            </p>
-          )}
         </section>
       </div>
     </div>,

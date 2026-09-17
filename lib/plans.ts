@@ -1,5 +1,5 @@
 // Định nghĩa các gói đăng ký dành cho giáo viên.
-// Giá theo USD/tháng (giống mẫu tham khảo); gói năm được giảm ~2 tháng.
+// Giá hiển thị và thanh toán bằng VND; gói năm rẻ hơn trả theo tháng.
 
 export type PlanId = 'free' | 'plus' | 'pro' | 'max';
 
@@ -13,10 +13,6 @@ export interface Plan {
   name: string;
   /** Mô tả ngắn hiển thị dưới tên gói trong thẻ chọn gói. */
   tagline: string;
-  /** Giá theo tháng (USD). 0 = miễn phí. */
-  monthly: number;
-  /** Giá mỗi tháng khi trả theo năm (USD) — đã giảm. */
-  yearly: number;
   /** Số tiền thực thu khi thanh toán theo tháng (VND). */
   monthlyVnd: number;
   /** Số tiền thực thu khi thanh toán theo năm (VND, tổng cả năm). */
@@ -33,16 +29,11 @@ export interface Plan {
   features: PlanFeature[];
 }
 
-// Hệ số quy đổi USD -> VND để hiển thị thêm giá tham khảo.
-export const USD_TO_VND = 25000;
-
 export const PLANS: Record<Exclude<PlanId, 'free'>, Plan> = {
   plus: {
     id: 'plus',
     name: 'PLUS',
     tagline: 'Tốt nhất cho giáo viên cá nhân và lớp nhỏ',
-    monthly: 12.49,
-    yearly: 9.99,
     monthlyVnd: 299000,
     yearlyVnd: 2990000,
     accent: 'text-amber-500',
@@ -75,8 +66,6 @@ export const PLANS: Record<Exclude<PlanId, 'free'>, Plan> = {
     id: 'pro',
     name: 'PRO',
     tagline: 'Tốt nhất cho trường học nhỏ và tổ chức đào tạo',
-    monthly: 32.99,
-    yearly: 26.99,
     monthlyVnd: 799000,
     yearlyVnd: 7990000,
     accent: 'text-sky-500',
@@ -109,8 +98,6 @@ export const PLANS: Record<Exclude<PlanId, 'free'>, Plan> = {
     id: 'max',
     name: 'MAX',
     tagline: 'Tốt nhất cho tổ chức lớn, trường học và doanh nghiệp',
-    monthly: 64.99,
-    yearly: 54.99,
     monthlyVnd: 1590000,
     yearlyVnd: 15900000,
     pricePrefix: 'từ',
@@ -151,11 +138,6 @@ export const PLAN_LABELS: Record<PlanId, string> = {
   pro: 'PRO',
   max: 'MAX',
 };
-
-/** Định dạng giá USD gọn gàng (giữ 2 chữ số nếu có phần lẻ). */
-export function formatUsd(value: number): string {
-  return `$${value.toFixed(2)}`;
-}
 
 export type BillingCycle = 'monthly' | 'yearly';
 
